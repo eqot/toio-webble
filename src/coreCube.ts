@@ -38,4 +38,5 @@ class CoreCube {
   }
 }
 
-export default CoreCube
+export { CoreCube }
+window.CoreCube = CoreCube

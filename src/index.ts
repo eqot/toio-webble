@@ -1,4 +1,4 @@
-import CoreCube from './coreCube'
+import { CoreCube } from './coreCube'
 
 const element = document.getElementById('root')
 if (element) {
