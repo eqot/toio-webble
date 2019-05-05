@@ -23,7 +23,7 @@ export default class RpcCaller {
       }
 
       this.targetWindow = target
-      const result = await this.sendCommand('ping', 'foo')
+      const result = await this.sendCommand('ping')
       if (result) {
         break
       }
