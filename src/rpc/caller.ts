@@ -1,3 +1,5 @@
+import Mirror from './mirror'
+
 export default class RpcCaller {
   targetWindow: Window
 
@@ -64,5 +66,23 @@ export default class RpcCaller {
 
   public async ping() {
     return this.sendCommand('ping')
+  }
+
+  public async makeMirror(objectName: string) {
+    const attributes = (await this.sendCommand('makeMirror'))[0]
+    const mirror: any = Mirror.makeMirror(this, objectName, attributes)
+
+    const originalFunction = mirror.discover
+    mirror.discover = async () => {
+      const subAttributes = await originalFunction()
+      console.log(subAttributes)
+
+      const subMirror: any = Mirror.makeMirror(this, 'coreCube', subAttributes)
+      console.log(subMirror)
+
+      return subMirror
+    }
+
+    return mirror
   }
 }
