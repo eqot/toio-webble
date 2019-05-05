@@ -38,4 +38,16 @@ export default class Mirror {
 
     return mirror
   }
+
+  public static injectFunction(mirror: any, functionName: string, func: any) {
+    if (!mirror.originalFunctions) {
+      mirror.originalFunctions = {}
+    }
+    mirror.originalFunctions[functionName] = mirror[functionName]
+
+    mirror[functionName] = async () => {
+      const result = await mirror.originalFunctions[functionName]()
+      return func(result)
+    }
+  }
 }

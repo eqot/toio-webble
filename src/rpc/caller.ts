@@ -70,18 +70,11 @@ export default class RpcCaller {
 
   public async makeMirror(objectName: string) {
     const attributes = (await this.sendCommand('makeMirror'))[0]
-    const mirror: any = Mirror.makeMirror(this, objectName, attributes)
+    const mirror = Mirror.makeMirror(this, objectName, attributes)
 
-    const originalFunction = mirror.discover
-    mirror.discover = async () => {
-      const subAttributes = await originalFunction()
-      console.log(subAttributes)
-
-      const subMirror: any = Mirror.makeMirror(this, 'coreCube', subAttributes)
-      console.log(subMirror)
-
-      return subMirror
-    }
+    Mirror.injectFunction(mirror, 'discover', subAttributes =>
+      Mirror.makeMirror(this, 'coreCube', subAttributes)
+    )
 
     return mirror
   }
